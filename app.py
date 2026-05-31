@@ -11,7 +11,7 @@ client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 # Format must be: whatsapp:+countrycode_number
 ALLOWED_NUMBERS = [
     "whatsapp:+918446451617",
-    "whatsapp:+918108661602",
+    "whatsapp:+919136081602",
 ]
 
 @app.route("/")
