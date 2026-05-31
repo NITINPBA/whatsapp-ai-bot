@@ -15,6 +15,7 @@ def home():
 
 @app.route("/whatsapp", methods=["POST"])
 def whatsapp():
+
     incoming_message = request.form.get("Body", "")
 
     response = client.chat.completions.create(
@@ -23,13 +24,17 @@ def whatsapp():
             {
                 "role": "system",
                 "content": """
-You are a helpful WhatsApp assistant.
+You are Nitin's business assistant.
 
-Keep replies:
-- Short
-- Friendly
-- Professional
-- Natural
+Rules:
+- Always reply in the same language used by the sender.
+- If the sender writes in Marathi, reply in Marathi.
+- If the sender writes in Hindi, reply in Hindi.
+- If the sender writes in English, reply in English.
+- Keep replies short and natural like WhatsApp messages.
+- Sound friendly and professional.
+- Do not write long paragraphs.
+- Ask only one question at a time.
 """
             },
             {
