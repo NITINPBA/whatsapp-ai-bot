@@ -5,9 +5,14 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-client = OpenAI(
-    api_key=os.environ["OPENAI_API_KEY"]
-)
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+
+# Add only the WhatsApp numbers allowed to use your bot.
+# Format must be: whatsapp:+countrycode_number
+ALLOWED_NUMBERS = [
+    "whatsapp:+918446451617",
+    "whatsapp:+918108661602",
+]
 
 @app.route("/")
 def home():
@@ -15,8 +20,14 @@ def home():
 
 @app.route("/whatsapp", methods=["POST"])
 def whatsapp():
-
     incoming_message = request.form.get("Body", "")
+    sender_number = request.form.get("From", "")
+
+    # Block anyone not in your approved list
+    if sender_number not in ALLOWED_NUMBERS:
+        twilio_response = MessagingResponse()
+        twilio_response.message("This bot is currently available only for approved contacts.")
+        return str(twilio_response)
 
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
@@ -37,10 +48,7 @@ Rules:
 - Ask only one question at a time.
 """
             },
-            {
-                "role": "user",
-                "content": incoming_message
-            }
+            {"role": "user", "content": incoming_message}
         ],
         temperature=0.5
     )
